@@ -5,27 +5,21 @@ from skimage.util import random_noise
 import matplotlib.pyplot as plt
 
 
-def print_hi(name):
-    image = cv2.imread("wiki.jpg")
+def print_hi(h):
+    image = cv2.imread("wiki.jpg",0)
+    salt_pepper_prob = 0.03
     random_numbers = (1,2,3,4,5,6,7,8)
     N = random.choice(random_numbers)
-    fig = plt.figure()
+
     testo = image
     for i in range(N):
-        fig.add_subplot(4, 2, i+1)
-        testo = salt_pepper(testo,0.03)
-        plt.imshow(testo, cmap = 'gray')
-        plt.title(i)
+        testo = salt_pepper(testo,salt_pepper_prob)
+        show_image(testo,i)
 
-        #plt.imshow(display[i], cmap = 'gray')
-    plt.show()
-
-    #cv2.imshow("aksda",testo)
-    #cv2.waitKey(0)
-    test2 = skiNoise(image)
-    cv2.imshow("aksda",test2)
-    cv2.waitKey(0)
-    print(type(image))
+    testo = image
+    for i in range(N):
+        testo = ski_salt_pepper(testo)
+        show_image_ski(testo,i)
 
 
 def salt_pepper(image,prob):
@@ -61,9 +55,19 @@ def d_noise(image,prob):
                 output[i][j] = image[i][j]
     return output
 
+def show_image(image, number):
+    name = "S&p applied " + str((number+1)) + " time/s"
+    cv2.imshow(name, image)
+    cv2.waitKey(0)
+
+def show_image_ski(image, number):
+    name = "Ski S&p applied " + str((number+1)) + " time/s"
+    cv2.imshow(name, image)
+    cv2.waitKey(0)
+
 def skiNoise(image):
     # Add salt-and-pepper noise to the image.
-    noise_img = random_noise(image, 's&p')
+    noise_img = random_noise(image, 'gaussian')
 
     # The above function returns a floating-point image
     # on the range [0, 1], thus we changed it to 'uint8'
@@ -72,8 +76,16 @@ def skiNoise(image):
     noise_img = noise_img.astype(np.uint8)
     return noise_img
 
+def ski_salt_pepper(image):
+    noise_img = random_noise(image, mode='s&p')
+
+    # The above function returns a floating-point image
+    # on the range [0, 1], thus we changed it to 'uint8'
+    # and from [0,255]
+    noise_img = np.array(255*noise_img, dtype = 'uint8')
+    return noise_img
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
