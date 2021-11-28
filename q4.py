@@ -2,46 +2,58 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt
+import timeit
 
+# Muhammet Derviş kopuz
+# 504201531
 
 def start():
     # read image in gray scale
     image = cv2.imread("Frequency_Filter.jpg", 0)
+
+    numpy_butterworth(image)
+
+    starttime = timeit.default_timer()
+    print("The start time is :",starttime)
+    blurred = cv2_2d_filter(image)
+    print("The time difference is :", timeit.default_timer() - starttime)
+
+    show_image(blurred, "Cv2 2D Filter")
+
+
+def numpy_butterworth(image):
     # use fast sourier transform method in np library to transform image to frequency domain
     original = np.fft.fft2(image)
     # usisng fftshift function we can carry the origin to the center of the domain
-    center = np.fft.fftshift(original)
+    centered = np.fft.fftshift(original)
     # show image
     plt.imshow(image, "gray", aspect='auto')
     plt.title("Original Image")
     plt.show()
-
     # log of the values are taken to make it easier to see, since values are quite small
     plt.imshow(np.log(0.1 + np.abs(original)), "gray", aspect='auto')
     plt.title("Spectrum")
     plt.show()
     # log is taken for display
-    plt.imshow(np.log(0.1 + np.abs(center)), "gray", aspect='auto')
+    plt.imshow(np.log(0.1 + np.abs(centered)), "gray", aspect='auto')
     plt.title("Spectrum Centered")
     plt.show()
-
-    d=40
-    n=10
+    starttime = timeit.default_timer()
+    print("The start time is :",starttime)
+    d = 40
+    n = 10
     plot_butterworth(d, image, n)
-    filter_image(center, d, image, n)
+    filter_image(centered, d, image, n)
+    print("The time difference is :", timeit.default_timer() - starttime)
 
-    d=40
-    n=1
+    d = 40
+    n = 1
     plot_butterworth(d, image, n)
-    filter_image(center, d, image, n)
-
-    d=20
-    n=10
+    filter_image(centered, d, image, n)
+    d = 20
+    n = 10
     plot_butterworth(d, image, n)
-    filter_image(center, d, image, n)
-
-    blurred = cv2_2d_filter(image)
-    show_image(blurred, "Cv2 2D Filter")
+    filter_image(centered, d, image, n)
 
 
 def plot_butterworth(d, image, n):
@@ -80,7 +92,7 @@ def butterworth_low_pass(d_0, n, image):
     rows, columns = shape[:2]
     #get origin of image
     origin = (rows / 2, columns / 2)
-    temp = np.zeros(rows, columns)
+    temp = np.zeros(shape[:2])
     for x in range(columns):
         for y in range(rows):
             #apply butterworth function
