@@ -8,6 +8,10 @@ import timeit
 
 def start():
     image = cv2.imread("wiki.jpg",0)
+    if image is None:
+        print("No image available")
+        return "No image available"
+
     starttime = timeit.default_timer()
     print("The start time is :",starttime)
     equalizer(image)

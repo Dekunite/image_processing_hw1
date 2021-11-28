@@ -9,6 +9,9 @@ from skimage.util import random_noise
 def start():
     #read image
     image = cv2.imread("wiki.jpg",0)
+    if image is None:
+        print("No image available")
+        return "No image available"
     salt_pepper_prob = 0.03
     random_numbers = (1,2,3,4,5,6,7,8)
     #choose random number

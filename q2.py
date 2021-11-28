@@ -12,6 +12,10 @@ import timeit
 def start():
     #read image
     image = cv2.imread("wiki.jpg",0)
+    if image is None:
+        print("No image available")
+        return "No image available"
+
     show_image(image, "original image")
 
     starttime = timeit.default_timer()

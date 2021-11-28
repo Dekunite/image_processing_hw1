@@ -10,6 +10,9 @@ import timeit
 def start():
     # read image in gray scale
     image = cv2.imread("Frequency_Filter.jpg", 0)
+    if image is None:
+        print("No image available")
+        return "No image available"
 
     numpy_butterworth(image)
 
